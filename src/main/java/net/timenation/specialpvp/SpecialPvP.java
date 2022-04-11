@@ -1,11 +1,11 @@
 package net.timenation.specialpvp;
 
 import net.timenation.specialpvp.commands.StartCommand;
-import net.timenation.specialpvp.listener.LobbyProtection;
-import net.timenation.specialpvp.listener.PlayerJoinListener;
-import net.timenation.specialpvp.listener.PlayerQuitListener;
+import net.timenation.specialpvp.commands.UnnickCommand;
+import net.timenation.specialpvp.listener.*;
 import net.timenation.specialpvp.manager.CountdownManager;
 import net.timenation.specialpvp.manager.IngameManager;
+import net.timenation.specialpvp.manager.InventoryManager;
 import net.timenation.specialpvp.manager.kits.KitManager;
 import net.timenation.timespigotapi.manager.game.TimeGame;
 import net.timenation.timespigotapi.manager.game.defaultitems.DefaultGameExplainItem;
@@ -28,8 +28,10 @@ public final class SpecialPvP extends TimeGame {
     private static SpecialPvP instance;
     private IngameManager ingameManager;
     private CountdownManager countdownManager;
+    private InventoryManager inventoryManager;
     private KitManager kitManager;
     private DefaultGameQuitItem defaultGameQuitItem;
+    private DefaultGameNavigatorItem defaultGameNavigatorItem;
 
     @Override
     public void onEnable() {
@@ -37,6 +39,7 @@ public final class SpecialPvP extends TimeGame {
         ingameManager = new IngameManager();
         countdownManager = new CountdownManager(this);
         kitManager = new KitManager();
+        inventoryManager = new InventoryManager();
         defaultGameQuitItem = new DefaultGameQuitItem(this, 7);
 
         setPrefix("SpecialPvP");
@@ -46,7 +49,7 @@ public final class SpecialPvP extends TimeGame {
         setScoreboardManager(new ScoreboardManager(this));
         setGameWithKits(true);
         setCountdown(60);
-        new DefaultGameNavigatorItem(this, 1);
+        defaultGameNavigatorItem = new DefaultGameNavigatorItem(this, 1);
         new DefaultGameExplainItem(this,6, "api.game.specialpvp.explain");
         new TrampolineFeature(this);
         new NickModule(this);
@@ -70,8 +73,13 @@ public final class SpecialPvP extends TimeGame {
         pluginManager.registerEvents(new PlayerJoinListener(), this);
         pluginManager.registerEvents(new PlayerQuitListener(), this);
         pluginManager.registerEvents(new LobbyProtection(), this);
+        pluginManager.registerEvents(new PlayerInteractListener(), this);
+        pluginManager.registerEvents(new InventoryClickListener(), this);
+        pluginManager.registerEvents(new PlayerDeathListener(), this);
+        pluginManager.registerEvents(new PlayerItemConsumeListener(), this);
 
         getCommand("start").setExecutor(new StartCommand());
+        getCommand("unnick").setExecutor(new UnnickCommand(this));
     }
 
     public static SpecialPvP getInstance() {
@@ -90,8 +98,16 @@ public final class SpecialPvP extends TimeGame {
         return kitManager;
     }
 
+    public InventoryManager getInventoryManager() {
+        return inventoryManager;
+    }
+
     public DefaultGameQuitItem getDefaultGameQuitItem() {
         return defaultGameQuitItem;
+    }
+
+    public DefaultGameNavigatorItem getDefaultGameNavigatorItem() {
+        return defaultGameNavigatorItem;
     }
 
     @Override

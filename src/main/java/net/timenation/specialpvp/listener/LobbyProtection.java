@@ -1,11 +1,15 @@
 package net.timenation.specialpvp.listener;
 
 import net.timenation.specialpvp.SpecialPvP;
+import net.timenation.timespigotapi.manager.ItemManager;
 import net.timenation.timespigotapi.manager.game.gamestates.GameState;
 import net.timenation.timespigotapi.manager.language.I18n;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,6 +18,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.weather.WeatherChangeEvent;
@@ -22,37 +27,27 @@ public class LobbyProtection implements Listener {
 
     @EventHandler
     public void handleBlockBreak(BlockBreakEvent event) {
-        if (SpecialPvP.getInstance().getGameState() != GameState.INGAME || SpecialPvP.getInstance().getSpecatePlayers().contains(event.getPlayer())) {
-            event.setCancelled(true);
-        }
+        event.setCancelled(true);
     }
 
     @EventHandler
     public void handlePlayerBucketEmpty(PlayerBucketEmptyEvent event) {
-        if (SpecialPvP.getInstance().getSpecatePlayers().contains(event.getPlayer())) {
-            event.setCancelled(true);
-        }
+        event.setCancelled(true);
     }
 
     @EventHandler
     public void handlePlayerBucketFill(PlayerBucketFillEvent event) {
-        if (SpecialPvP.getInstance().getSpecatePlayers().contains(event.getPlayer())) {
-            event.setCancelled(true);
-        }
+        event.setCancelled(true);
     }
 
     @EventHandler
     public void handleBlockPlace(BlockPlaceEvent event) {
-        if (SpecialPvP.getInstance().getGameState() != GameState.INGAME || SpecialPvP.getInstance().getSpecatePlayers().contains(event.getPlayer())) {
-            event.setCancelled(true);
-        }
+        event.setCancelled(true);
     }
 
     @EventHandler
     public void handleInventoryClick(InventoryClickEvent event) {
-        if (SpecialPvP.getInstance().getGameState() != GameState.INGAME || SpecialPvP.getInstance().getSpecatePlayers().contains((Player) event.getWhoClicked())) {
-            event.setCancelled(true);
-        }
+        event.setCancelled(true);
     }
 
     @EventHandler
@@ -76,23 +71,17 @@ public class LobbyProtection implements Listener {
 
     @EventHandler
     public void handlePlayerDropItem(PlayerDropItemEvent event) {
-        if (SpecialPvP.getInstance().getGameState() != GameState.INGAME || SpecialPvP.getInstance().getSpecatePlayers().contains(event.getPlayer())) {
-            event.setCancelled(true);
-        }
+        event.setCancelled(true);
     }
 
     @EventHandler
     public void handlePlayerPickupItem(PlayerPickupItemEvent event) {
-        if (SpecialPvP.getInstance().getGameState() != GameState.INGAME || SpecialPvP.getInstance().getSpecatePlayers().contains(event.getPlayer())) {
-            event.setCancelled(true);
-        }
+        event.setCancelled(true);
     }
 
     @EventHandler
     public void handleFoodLevelChange(FoodLevelChangeEvent event) {
-        if (SpecialPvP.getInstance().getGameState() != GameState.INGAME) {
-            event.setCancelled(true);
-        }
+        event.setCancelled(true);
     }
 
     @EventHandler
@@ -104,9 +93,7 @@ public class LobbyProtection implements Listener {
 
     @EventHandler
     public void handlePlayerArmorStandManipulate(PlayerArmorStandManipulateEvent event) {
-        if (SpecialPvP.getInstance().getGameState() != GameState.INGAME) {
-            event.setCancelled(true);
-        }
+        event.setCancelled(true);
     }
 
     @EventHandler
@@ -115,6 +102,25 @@ public class LobbyProtection implements Listener {
             if (event.getEntity() instanceof ArmorStand) {
                 event.setCancelled(true);
             }
+        } else {
+            if (event.getDamager() instanceof Player player) {
+
+                if (SpecialPvP.getInstance().getSpecatePlayers().contains(player)) {
+                    event.setCancelled(true);
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onHit(ProjectileHitEvent event) {
+        var player = event.getHitEntity();
+
+        if (event.getEntity().getType() == EntityType.TRIDENT) {
+            event.getEntity().remove();
+            var shooter = (Player) event.getEntity().getShooter();
+
+            shooter.getInventory().addItem(new ItemManager(Material.TRIDENT).addEnchantment(Enchantment.LOYALTY, 1).setDisplayName("§8» §9Poseidon´s Gabel").addEnchantment(Enchantment.DURABILITY, 2).addEnchantment(Enchantment.DAMAGE_ALL, 2).build());
         }
     }
 

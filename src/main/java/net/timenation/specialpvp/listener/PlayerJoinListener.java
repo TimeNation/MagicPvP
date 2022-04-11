@@ -44,9 +44,10 @@ public class PlayerJoinListener implements Listener {
         player.getInventory().clear();
         player.getInventory().setItem(1, new ItemManager(Material.COMPASS, 1).setDisplayName(I18n.format(player, "api.game.item.teleporter")).build());
         SpecialPvP.getInstance().getDefaultGameQuitItem().setItem(player);
-        TimeSpigotAPI.getInstance().getTablistManager().registerRankTeam(player, "§c✗ §8» ", "", ChatColor.GRAY, 18);
         player.teleport(new Location(Bukkit.getWorld("world"), 111.5, 114.00, -262.5, -45, 0));
         player.setAllowFlight(true);
+
+        Bukkit.getScheduler().runTaskLater(SpecialPvP.getInstance(), () -> TimeSpigotAPI.getInstance().getTablistManager().registerRankTeam(player, "§c✗ §8» ", "", ChatColor.GRAY, 18), 5);
     }
 
 }
