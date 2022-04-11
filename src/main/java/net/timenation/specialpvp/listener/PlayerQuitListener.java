@@ -9,11 +9,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-/**
- * Created by Moritz on 11.04.2022
- *
- * @author ItzMxritz (blockpixels.de)
- */
 public class PlayerQuitListener implements Listener {
 
     @EventHandler

@@ -13,17 +13,12 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-/**
- * Created by Moritz on 11.04.2022
- *
- * @author ItzMxritz (blockpixels.de)
- */
 public enum KitType {
 
     DEFAULT("api.game.specialpvp.kits.default", "api.game.specialpvp.kits.default.name", "api.game.specialpvp.kits.default.description", new KitObject("",
             ChatColor.BLUE,
             new ItemManager(Material.LEATHER_CHESTPLATE).setLeatherArmorColor(Color.BLUE).build(),
-            new ItemStack[]{ new ItemManager(Material.IRON_SWORD).addEnchantment(Enchantment.DAMAGE_ALL, 5).addEnchantment(Enchantment.KNOCKBACK, 2).addEnchantment(Enchantment.DURABILITY, 3).build(), new ItemManager(Material.ENCHANTED_GOLDEN_APPLE, 1).build() },
+            new ItemStack[]{ new ItemManager(Material.IRON_SWORD).addEnchantment(Enchantment.DAMAGE_ALL, 3).addEnchantment(Enchantment.KNOCKBACK, 2).addEnchantment(Enchantment.DURABILITY, 3).build(), new ItemManager(Material.ENCHANTED_GOLDEN_APPLE, 1).build() },
             new ItemStack[]{ new ItemManager(Material.LEATHER_BOOTS).setLeatherArmorColor(Color.BLUE).build(), new ItemManager(Material.LEATHER_LEGGINGS).setLeatherArmorColor(Color.BLUE).build(), new ItemManager(Material.CHAINMAIL_CHESTPLATE).build(), new ItemManager(Material.LEATHER_HELMET).setLeatherArmorColor(Color.BLUE).build() }
             ));
 

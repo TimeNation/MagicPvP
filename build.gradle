@@ -7,15 +7,14 @@ version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
-    maven {
-        name = 'papermc-repo'
-        url = 'https://papermc.io/repo/repository/maven-public/'
-    }
+    maven { url = 'https://papermc.io/repo/repository/maven-public/' }
+    maven { url "https://repo.thesimplecloud.eu/artifactory/gradle-release-local/" }
 }
 
 dependencies {
-    compileOnly 'io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT'
-    compileOnly fileTree(dir: '../TimeSpigotAPI', include: '*.jar')
+    compileOnly 'io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT'
+    compileOnly group: 'eu.thesimplecloud.simplecloud', name: 'simplecloud-api', version: "2.3.0";
+    compileOnly fileTree(dir: '../TimeSpigotAPI/build/libs', include: '*.jar')
 }
 
 def targetJavaVersion = 17

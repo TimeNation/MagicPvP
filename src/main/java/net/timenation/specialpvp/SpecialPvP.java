@@ -1,9 +1,11 @@
 package net.timenation.specialpvp;
 
 import net.timenation.specialpvp.commands.StartCommand;
+import net.timenation.specialpvp.listener.LobbyProtection;
 import net.timenation.specialpvp.listener.PlayerJoinListener;
 import net.timenation.specialpvp.listener.PlayerQuitListener;
 import net.timenation.specialpvp.manager.CountdownManager;
+import net.timenation.specialpvp.manager.IngameManager;
 import net.timenation.specialpvp.manager.kits.KitManager;
 import net.timenation.timespigotapi.manager.game.TimeGame;
 import net.timenation.timespigotapi.manager.game.defaultitems.DefaultGameExplainItem;
@@ -13,11 +15,9 @@ import net.timenation.timespigotapi.manager.game.features.TrampolineFeature;
 import net.timenation.timespigotapi.manager.game.gamestates.GameState;
 import net.timenation.timespigotapi.manager.game.manager.ConfigManager;
 import net.timenation.timespigotapi.manager.game.modules.NickModule;
+import net.timenation.timespigotapi.manager.game.scoreboard.ScoreboardManager;
 import net.timenation.timespigotapi.manager.game.team.TeamManager;
-import org.bukkit.Bukkit;
-import org.bukkit.Difficulty;
-import org.bukkit.GameRule;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
@@ -26,30 +26,33 @@ import java.util.ArrayList;
 public final class SpecialPvP extends TimeGame {
 
     private static SpecialPvP instance;
-
-    private DefaultGameQuitItem defaultGameQuitItem;
-    private KitManager kitManager;
+    private IngameManager ingameManager;
     private CountdownManager countdownManager;
+    private KitManager kitManager;
+    private DefaultGameQuitItem defaultGameQuitItem;
 
     @Override
     public void onEnable() {
         instance = this;
+        ingameManager = new IngameManager();
+        countdownManager = new CountdownManager(this);
+        kitManager = new KitManager();
+        defaultGameQuitItem = new DefaultGameQuitItem(this, 7);
 
         setPrefix("SpecialPvP");
         setColor("§9");
         setSecoundColor("§9");
         setGameState(GameState.LOBBY);
+        setScoreboardManager(new ScoreboardManager(this));
         setGameWithKits(true);
         setCountdown(60);
-
-        this.defaultGameQuitItem = new DefaultGameQuitItem(this, 7);
         new DefaultGameNavigatorItem(this, 1);
         new DefaultGameExplainItem(this,6, "api.game.specialpvp.explain");
         new TrampolineFeature(this);
         new NickModule(this);
 
-        this.kitManager = new KitManager();
-        this.countdownManager = new CountdownManager(this);
+        Bukkit.createWorld(new WorldCreator("Castle"));
+        setGameMap("Castle", "Pixelbiester", Bukkit.getWorld("Castle"));
 
         for (World world : Bukkit.getWorlds()) {
             world.setDifficulty(Difficulty.EASY);
@@ -66,6 +69,7 @@ public final class SpecialPvP extends TimeGame {
         PluginManager pluginManager = Bukkit.getPluginManager();
         pluginManager.registerEvents(new PlayerJoinListener(), this);
         pluginManager.registerEvents(new PlayerQuitListener(), this);
+        pluginManager.registerEvents(new LobbyProtection(), this);
 
         getCommand("start").setExecutor(new StartCommand());
     }
@@ -74,8 +78,8 @@ public final class SpecialPvP extends TimeGame {
         return instance;
     }
 
-    public DefaultGameQuitItem getDefaultGameQuitItem() {
-        return defaultGameQuitItem;
+    public IngameManager getIngameManager() {
+        return ingameManager;
     }
 
     public CountdownManager getCountdownManager() {
@@ -84,6 +88,10 @@ public final class SpecialPvP extends TimeGame {
 
     public KitManager getKitManager() {
         return kitManager;
+    }
+
+    public DefaultGameQuitItem getDefaultGameQuitItem() {
+        return defaultGameQuitItem;
     }
 
     @Override
