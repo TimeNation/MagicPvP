@@ -1,0 +1,9 @@
+name: SpecialPvP
+version: '${version}'
+main: net.timenation.specialpvp.SpecialPvP
+api-version: 1.18
+depend: [ TimeSpigotAPI ]
+author: ItzMxritz
+
+commands:
+  start:
