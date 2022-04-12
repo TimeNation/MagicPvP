@@ -1,6 +1,6 @@
-package net.timenation.specialpvp.manager;
+package net.timenation.magicpvp.manager;
 
-import net.timenation.specialpvp.SpecialPvP;
+import net.timenation.magicpvp.MagicPvP;
 import net.timenation.timespigotapi.manager.language.I18n;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
@@ -19,7 +19,7 @@ public class ManaManager {
         this.playerMana = new HashMap<>();
         this.bossBarMap = new HashMap<>();
 
-        Bukkit.getScheduler().runTaskTimerAsynchronously(SpecialPvP.getInstance(), () -> SpecialPvP.getInstance().getPlayers().forEach(this::addManaToPlayer), 0, 20);
+        Bukkit.getScheduler().runTaskTimerAsynchronously(MagicPvP.getInstance(), () -> MagicPvP.getInstance().getPlayers().forEach(this::addManaToPlayer), 0, 20);
     }
 
     public void setPlayersMana(Player player, int mana) {
@@ -30,7 +30,7 @@ public class ManaManager {
         if(getPlayersMana(player) <= 20) {
             this.playerMana.put(player, getPlayersMana(player) == 20 ? 20 : this.playerMana.get(player) + 1);
             this.bossBarMap.get(player).setProgress(getPlayersMana(player) == 20 ? 1 : this.bossBarMap.get(player).getProgress() + 0.05);
-            this.bossBarMap.get(player).setTitle(I18n.format(player, "api.game.bossbar.specialpvp.mana", getPlayersMana(player), SpecialPvP.getInstance().getColor()));
+            this.bossBarMap.get(player).setTitle(I18n.format(player, "api.game.bossbar.magicpvp.mana", getPlayersMana(player), MagicPvP.getInstance().getColor()));
         }
 
         if (getPlayersMana(player) < 5) {
@@ -47,7 +47,7 @@ public class ManaManager {
             case LEVEL_7 -> getPlayersBossBar(player).setProgress(getPlayersBossBar(player).getProgress() - 0.35);
             case LEVEL_10 -> getPlayersBossBar(player).setProgress(getPlayersBossBar(player).getProgress() - 0.5);
         }
-        this.bossBarMap.get(player).setTitle(I18n.format(player, "api.game.bossbar.specialpvp.mana", getPlayersMana(player), SpecialPvP.getInstance().getColor()));
+        this.bossBarMap.get(player).setTitle(I18n.format(player, "api.game.bossbar.magicpvp.mana", getPlayersMana(player), MagicPvP.getInstance().getColor()));
         if (getPlayersMana(player) < 5) {
             this.bossBarMap.get(player).setColor(BarColor.RED);
         } else {
@@ -60,7 +60,7 @@ public class ManaManager {
     }
 
     public void addPlayerBossBar(Player player) {
-        this.bossBarMap.put(player, Bukkit.createBossBar(I18n.format(player, "api.game.bossbar.specialpvp.mana", 20, SpecialPvP.getInstance().getColor()), BarColor.GREEN, BarStyle.SOLID));
+        this.bossBarMap.put(player, Bukkit.createBossBar(I18n.format(player, "api.game.bossbar.magicpvp.mana", 20, MagicPvP.getInstance().getColor()), BarColor.GREEN, BarStyle.SOLID));
         this.bossBarMap.get(player).addPlayer(player);
     }
 

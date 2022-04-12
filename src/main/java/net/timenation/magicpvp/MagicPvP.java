@@ -1,12 +1,12 @@
-package net.timenation.specialpvp;
+package net.timenation.magicpvp;
 
 import com.google.gson.JsonParser;
-import net.timenation.specialpvp.commands.StartCommand;
-import net.timenation.specialpvp.commands.UnnickCommand;
-import net.timenation.specialpvp.listener.*;
-import net.timenation.specialpvp.manager.*;
-import net.timenation.specialpvp.manager.kits.KitManager;
-import net.timenation.specialpvp.manager.skills.LightningLastHittetPlayerSkill;
+import net.timenation.magicpvp.commands.StartCommand;
+import net.timenation.magicpvp.commands.UnnickCommand;
+import net.timenation.magicpvp.listener.*;
+import net.timenation.magicpvp.manager.*;
+import net.timenation.magicpvp.manager.kits.KitManager;
+import net.timenation.magicpvp.manager.skills.LightningLastHittetPlayerSkill;
 import net.timenation.timespigotapi.manager.game.TimeGame;
 import net.timenation.timespigotapi.manager.game.defaultitems.DefaultGameExplainItem;
 import net.timenation.timespigotapi.manager.game.defaultitems.DefaultGameNavigatorItem;
@@ -27,15 +27,15 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 
-public final class SpecialPvP extends TimeGame {
+public final class MagicPvP extends TimeGame {
 
-    private static SpecialPvP instance;
+    private static MagicPvP instance;
     private IngameManager ingameManager;
     private CountdownManager countdownManager;
     private InventoryManager inventoryManager;
     private KitManager kitManager;
     private ManaManager manaManager;
-    private SpecialPvPConfig specialPvPConfig;
+    private MagicPvPConfig specialPvPConfig;
     private DefaultGameQuitItem defaultGameQuitItem;
 
     @Override
@@ -46,19 +46,19 @@ public final class SpecialPvP extends TimeGame {
         inventoryManager = new InventoryManager();
         kitManager = new KitManager();
         manaManager = new ManaManager();
-        specialPvPConfig = new SpecialPvPConfig();
+        specialPvPConfig = new MagicPvPConfig();
         defaultGameQuitItem = new DefaultGameQuitItem(this, 7);
 
-        setPrefix("SpecialPvP");
-        setColor("§9");
-        setSecoundColor("§9");
+        setPrefix("MagicPvP");
+        setColor("§5");
+        setSecoundColor("§d");
         setGameState(GameState.LOBBY);
         setScoreboardManager(new ScoreboardManager(this));
         setGameWithKits(true);
         setCountdown(60);
 
         new DefaultGameNavigatorItem(this, 1);
-        new DefaultGameExplainItem(this,6, "api.game.specialpvp.explain");
+        new DefaultGameExplainItem(this,6, "api.game.magicpvp.explain");
 
         new TrampolineFeature(this);
         new NickModule(this);
@@ -66,7 +66,7 @@ public final class SpecialPvP extends TimeGame {
 
         new LightningLastHittetPlayerSkill(this);
 
-        for (File file : new File("plugins/SpecialPvP/maps").listFiles()) {
+        for (File file : new File("plugins/MagicPvP/maps").listFiles()) {
             try {
                 Bukkit.createWorld(new WorldCreator(new JsonParser().parse(new FileReader(file)).getAsJsonObject().get("mapWorld").getAsString()));
             } catch (FileNotFoundException ignored) {}
@@ -98,7 +98,7 @@ public final class SpecialPvP extends TimeGame {
         getCommand("unnick").setExecutor(new UnnickCommand(this));
     }
 
-    public static SpecialPvP getInstance() {
+    public static MagicPvP getInstance() {
         return instance;
     }
 
@@ -122,7 +122,7 @@ public final class SpecialPvP extends TimeGame {
         return manaManager;
     }
 
-    public SpecialPvPConfig getSpecialPvPConfig() {
+    public MagicPvPConfig getSpecialPvPConfig() {
         return specialPvPConfig;
     }
 

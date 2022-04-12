@@ -1,6 +1,6 @@
-package net.timenation.specialpvp.listener;
+package net.timenation.magicpvp.listener;
 
-import net.timenation.specialpvp.SpecialPvP;
+import net.timenation.magicpvp.MagicPvP;
 import net.timenation.timespigotapi.manager.game.gamestates.GameState;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -16,20 +16,20 @@ public class PlayerInteractListener implements Listener {
 
         if (event.getItem() == null || event.getItem().getItemMeta() == null || event.getItem().getType().equals(Material.AIR)) return;
 
-        if (SpecialPvP.getInstance().getSpecatePlayers().contains(player) || SpecialPvP.getInstance().getGameState().equals(GameState.LOBBY) || SpecialPvP.getInstance().getGameState().equals(GameState.STARTING)) {
+        if (MagicPvP.getInstance().getSpecatePlayers().contains(player) || MagicPvP.getInstance().getGameState().equals(GameState.LOBBY) || MagicPvP.getInstance().getGameState().equals(GameState.STARTING)) {
             event.setCancelled(true);
         }
 
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             switch (event.getItem().getType()) {
                 case BARREL -> {
-                    if (SpecialPvP.getInstance().getGameState() == GameState.LOBBY || SpecialPvP.getInstance().getGameState() == GameState.STARTING) {
-                        SpecialPvP.getInstance().getInventoryManager().openSelectKitInventory(player);
+                    if (MagicPvP.getInstance().getGameState() == GameState.LOBBY || MagicPvP.getInstance().getGameState() == GameState.STARTING) {
+                        MagicPvP.getInstance().getInventoryManager().openSelectKitInventory(player);
                     }
                 }
                 case COMPASS -> {
-                    if (SpecialPvP.getInstance().getGameState().equals(GameState.INGAME)) {
-                        SpecialPvP.getInstance().getInventoryManager().openPlayersInventory(player);
+                    if (MagicPvP.getInstance().getGameState().equals(GameState.INGAME)) {
+                        MagicPvP.getInstance().getInventoryManager().openPlayersInventory(player);
                     }
                 }
             }

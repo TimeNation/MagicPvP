@@ -1,4 +1,4 @@
-package net.timenation.specialpvp.manager.kits;
+package net.timenation.magicpvp.manager.kits;
 
 import com.google.common.collect.Maps;
 import org.bukkit.entity.Player;

@@ -1,4 +1,4 @@
-package net.timenation.specialpvp.listener;
+package net.timenation.magicpvp.listener;
 
 import org.bukkit.Sound;
 import org.bukkit.event.EventHandler;

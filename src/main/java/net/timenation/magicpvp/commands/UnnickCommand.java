@@ -1,4 +1,4 @@
-package net.timenation.specialpvp.commands;
+package net.timenation.magicpvp.commands;
 
 import eu.thesimplecloud.api.CloudAPI;
 import net.timenation.timespigotapi.TimeSpigotAPI;

@@ -1,9 +1,9 @@
-name: SpecialPvP
+name: MagicPvP
 version: '${version}'
-main: net.timenation.specialpvp.SpecialPvP
+main: net.timenation.magicpvp.MagicPvP
 api-version: 1.18
 depend: [ TimeSpigotAPI ]
-author: ItzMxritz
+authors: [ ByRaudy, ItzMxritz ]
 
 commands:
   start:

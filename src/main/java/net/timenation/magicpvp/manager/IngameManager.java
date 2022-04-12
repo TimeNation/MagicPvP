@@ -1,4 +1,4 @@
-package net.timenation.specialpvp.manager;
+package net.timenation.magicpvp.manager;
 
 import net.timenation.timespigotapi.manager.game.TimeGame;
 import net.timenation.timespigotapi.manager.language.I18n;

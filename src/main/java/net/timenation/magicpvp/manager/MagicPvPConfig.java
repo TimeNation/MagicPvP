@@ -1,4 +1,4 @@
-package net.timenation.specialpvp.manager;
+package net.timenation.magicpvp.manager;
 
 import com.google.gson.*;
 
@@ -9,15 +9,15 @@ import java.io.PrintWriter;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class SpecialPvPConfig {
+public class MagicPvPConfig {
 
     private final File file;
     private final Gson gson;
     private final ExecutorService pool;
     private JsonObject json;
 
-    public SpecialPvPConfig() {
-        this.file = new File("plugins/SpecialPvP/config.json");
+    public MagicPvPConfig() {
+        this.file = new File("plugins/MagicPvP/config.json");
         this.gson = new GsonBuilder().setPrettyPrinting().create();
         this.pool = Executors.newFixedThreadPool(2);
         this.initFile();
@@ -44,7 +44,7 @@ public class SpecialPvPConfig {
         }
     }
 
-    public <V> SpecialPvPConfig add(String key, V value) {
+    public <V> MagicPvPConfig add(String key, V value) {
         if (json.get(key) == null || json.get(key) instanceof JsonNull) {
             return set(key, value);
         }
@@ -52,7 +52,7 @@ public class SpecialPvPConfig {
         return this;
     }
 
-    public <V> SpecialPvPConfig set(String key, V value) {
+    public <V> MagicPvPConfig set(String key, V value) {
         if (value instanceof String) {
             json.addProperty(key, (String) value);
             return this;

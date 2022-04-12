@@ -1,6 +1,6 @@
-package net.timenation.specialpvp.listener;
+package net.timenation.magicpvp.listener;
 
-import net.timenation.specialpvp.SpecialPvP;
+import net.timenation.magicpvp.MagicPvP;
 import net.timenation.timespigotapi.manager.ItemManager;
 import net.timenation.timespigotapi.manager.game.gamestates.GameState;
 import net.timenation.timespigotapi.manager.language.I18n;
@@ -47,7 +47,7 @@ public class LobbyProtection implements Listener {
 
     @EventHandler
     public void handleInventoryClick(InventoryClickEvent event) {
-        if(SpecialPvP.getInstance().getGameState() != GameState.INGAME || SpecialPvP.getInstance().getSpecatePlayers().contains(event.getWhoClicked()) || event.getSlot() == 7 || event.getSlot() == 8) {
+        if(MagicPvP.getInstance().getGameState() != GameState.INGAME || MagicPvP.getInstance().getSpecatePlayers().contains(event.getWhoClicked()) || event.getSlot() == 7 || event.getSlot() == 8) {
             event.setCancelled(true);
         }
     }
@@ -56,7 +56,7 @@ public class LobbyProtection implements Listener {
     public void handleEntityDamageEvent(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
-            if (SpecialPvP.getInstance().getGameState() != GameState.INGAME || SpecialPvP.getInstance().getSpecatePlayers().contains(player)) {
+            if (MagicPvP.getInstance().getGameState() != GameState.INGAME || MagicPvP.getInstance().getSpecatePlayers().contains(player)) {
                 event.setCancelled(true);
             }
 
@@ -88,7 +88,7 @@ public class LobbyProtection implements Listener {
 
     @EventHandler
     public void handlePlayerChat(PlayerChatEvent event) {
-        if (SpecialPvP.getInstance().getSpecatePlayers().contains(event.getPlayer())) {
+        if (MagicPvP.getInstance().getSpecatePlayers().contains(event.getPlayer())) {
             event.setCancelled(true);
         }
     }
@@ -100,13 +100,13 @@ public class LobbyProtection implements Listener {
 
     @EventHandler
     public void handleEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (!SpecialPvP.getInstance().getGameState().equals(GameState.INGAME)) {
+        if (!MagicPvP.getInstance().getGameState().equals(GameState.INGAME)) {
             if (event.getEntity() instanceof ArmorStand) {
                 event.setCancelled(true);
             }
         } else {
             if (event.getDamager() instanceof Player player) {
-                if (SpecialPvP.getInstance().getSpecatePlayers().contains(player)) {
+                if (MagicPvP.getInstance().getSpecatePlayers().contains(player)) {
                     event.setCancelled(true);
                 }
             }
@@ -129,8 +129,8 @@ public class LobbyProtection implements Listener {
     public void handlePlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
 
-        if (SpecialPvP.getInstance().getGameState() == GameState.INGAME) {
-            if (SpecialPvP.getInstance().getSpecatePlayers().contains(event.getPlayer())) {
+        if (MagicPvP.getInstance().getGameState() == GameState.INGAME) {
+            if (MagicPvP.getInstance().getSpecatePlayers().contains(event.getPlayer())) {
                 if (player.getLocation().getY() <= 0) {
                     player.teleport(new Location(Bukkit.getWorld("world"), 111.5, 114.00, -262.5, -45, 0));
                 }
@@ -141,7 +141,7 @@ public class LobbyProtection implements Listener {
 
         if (player.getLocation().getY() <= 100) {
             player.teleport(new Location(Bukkit.getWorld("world"), 111.5, 114.00, -262.5, -45, 0));
-            player.sendMessage(I18n.format(player, "api.game.messages.jumpinvoid", SpecialPvP.getInstance().getPrefix()));
+            player.sendMessage(I18n.format(player, "api.game.messages.jumpinvoid", MagicPvP.getInstance().getPrefix()));
         }
     }
 }
