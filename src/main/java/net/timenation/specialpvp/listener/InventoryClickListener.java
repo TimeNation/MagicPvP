@@ -17,9 +17,8 @@ public class InventoryClickListener implements Listener {
     //api.game.title.spectator.top
 
     @EventHandler
-    public void onClick(InventoryClickEvent event) {
+    public void handleInventoryClick(InventoryClickEvent event) {
         var player = (Player) event.getWhoClicked();
-        TimePlayer timePlayer = TimeSpigotAPI.getInstance().getTimePlayerManager().getTimePlayer(player);
 
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == null || event.getCurrentItem().getItemMeta() == null || event.getCurrentItem().getItemMeta().getDisplayName() == null) return;
 
@@ -53,5 +52,4 @@ public class InventoryClickListener implements Listener {
             }
         }
     }
-
 }

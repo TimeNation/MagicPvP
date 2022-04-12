@@ -17,7 +17,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 public class PlayerJoinListener implements Listener {
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
+    public void handlePlayerJoin(PlayerJoinEvent event) {
         var player = event.getPlayer();
 
         if (SpecialPvP.getInstance().getGameState().equals(GameState.LOBBY) || SpecialPvP.getInstance().getGameState().equals(GameState.STARTING)) {

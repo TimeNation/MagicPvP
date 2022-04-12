@@ -12,7 +12,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class PlayerQuitListener implements Listener {
 
     @EventHandler
-    public void onQuit(PlayerQuitEvent event) {
+    public void handlePlayerQuit(PlayerQuitEvent event) {
         var player = event.getPlayer();
         TimeSpigotAPI.getInstance().getTimeStatsPlayerManager().updateTimeStatsPlayer(TimeSpigotAPI.getInstance().getTimeStatsPlayerManager().getTimeStatsPlayer(player, "SpecialPvP"));
 

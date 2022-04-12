@@ -31,11 +31,6 @@ public class IngameManager {
     }
 
     public void teleportPlayerToLocation(Player player, int tpCount, TimeGame timeGame) {
-        switch (tpCount) {
-            case 1 -> player.teleport(new Location(timeGame.getWorld(), 0.5, 118, 51.5, -180, 0));
-            case 2 -> player.teleport(new Location(timeGame.getWorld(), 0.5, 118, 11.5, 0, 0));
-            case 3 -> player.teleport(new Location(timeGame.getWorld(), 20.5, 118, 31.5, 90, 0));
-            case 4 -> player.teleport(new Location(timeGame.getWorld(), -19.5, 118, 31.5, -90, 0));
-        }
+        player.teleport(new Location(timeGame.getWorld(), timeGame.getConfigManager().getDouble("team" + tpCount + ".x"), timeGame.getConfigManager().getDouble("team" + tpCount + ".y"), timeGame.getConfigManager().getDouble("team" + tpCount + ".z"), timeGame.getConfigManager().getFloat("team" + tpCount + ".yaw"), 0));
     }
 }

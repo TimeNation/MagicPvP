@@ -47,7 +47,9 @@ public class LobbyProtection implements Listener {
 
     @EventHandler
     public void handleInventoryClick(InventoryClickEvent event) {
-        event.setCancelled(true);
+        if(SpecialPvP.getInstance().getGameState() != GameState.INGAME || SpecialPvP.getInstance().getSpecatePlayers().contains(event.getWhoClicked()) || event.getSlot() == 7 || event.getSlot() == 8) {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler
@@ -104,7 +106,6 @@ public class LobbyProtection implements Listener {
             }
         } else {
             if (event.getDamager() instanceof Player player) {
-
                 if (SpecialPvP.getInstance().getSpecatePlayers().contains(player)) {
                     event.setCancelled(true);
                 }
@@ -113,7 +114,7 @@ public class LobbyProtection implements Listener {
     }
 
     @EventHandler
-    public void onHit(ProjectileHitEvent event) {
+    public void handleProjectileHit(ProjectileHitEvent event) {
         var player = event.getHitEntity();
 
         if (event.getEntity().getType() == EntityType.TRIDENT) {

@@ -11,12 +11,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 public class PlayerInteractListener implements Listener {
 
     @EventHandler
-    public void onInteract(PlayerInteractEvent event) {
+    public void handlePlayerInteract(PlayerInteractEvent event) {
         var player = event.getPlayer();
 
-        if (event.getItem() == null) return;
-        if (event.getItem().getItemMeta() == null) return;
-        if (event.getItem().getType().equals(Material.AIR)) return;
+        if (event.getItem() == null || event.getItem().getItemMeta() == null || event.getItem().getType().equals(Material.AIR)) return;
 
         if (SpecialPvP.getInstance().getSpecatePlayers().contains(player) || SpecialPvP.getInstance().getGameState().equals(GameState.LOBBY) || SpecialPvP.getInstance().getGameState().equals(GameState.STARTING)) {
             event.setCancelled(true);
@@ -36,8 +34,5 @@ public class PlayerInteractListener implements Listener {
                 }
             }
         }
-
-
     }
-
 }

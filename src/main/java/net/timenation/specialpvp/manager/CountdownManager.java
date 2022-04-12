@@ -25,6 +25,8 @@ public class CountdownManager extends Countdown<SpecialPvP> {
             player.setMetadata("lives", new FixedMetadataValue(SpecialPvP.getInstance(), 3));
             SpecialPvP.getInstance().getIngameManager().sendIngameScoreboard(player, game);
             SpecialPvP.getInstance().getIngameManager().teleportPlayerToLocation(player, tpcount, game);
+            SpecialPvP.getInstance().getManaManager().setPlayersMana(player, 20);
+            Bukkit.getScheduler().runTask(game, () -> SpecialPvP.getInstance().getManaManager().addPlayerBossBar(player));
             player.getInventory().setContents(SpecialPvP.getInstance().getKitManager().getKitFromPlayer(player).getKitObject().getContent());
             player.getInventory().setArmorContents(SpecialPvP.getInstance().getKitManager().getKitFromPlayer(player).getKitObject().getArmor());
 
@@ -40,5 +42,10 @@ public class CountdownManager extends Countdown<SpecialPvP> {
     @Override
     public void before0() {
 
+    }
+
+    @Override
+    public void atEnd() {
+        Bukkit.getOnlinePlayers().forEach(player -> { SpecialPvP.getInstance().getManaManager().getPlayersBossBar(player).removeAll(); });
     }
 }

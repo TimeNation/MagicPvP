@@ -1,12 +1,12 @@
 package net.timenation.specialpvp;
 
+import com.google.gson.JsonParser;
 import net.timenation.specialpvp.commands.StartCommand;
 import net.timenation.specialpvp.commands.UnnickCommand;
 import net.timenation.specialpvp.listener.*;
-import net.timenation.specialpvp.manager.CountdownManager;
-import net.timenation.specialpvp.manager.IngameManager;
-import net.timenation.specialpvp.manager.InventoryManager;
+import net.timenation.specialpvp.manager.*;
 import net.timenation.specialpvp.manager.kits.KitManager;
+import net.timenation.specialpvp.manager.skills.LightningLastHittetPlayerSkill;
 import net.timenation.timespigotapi.manager.game.TimeGame;
 import net.timenation.timespigotapi.manager.game.defaultitems.DefaultGameExplainItem;
 import net.timenation.timespigotapi.manager.game.defaultitems.DefaultGameNavigatorItem;
@@ -14,6 +14,7 @@ import net.timenation.timespigotapi.manager.game.defaultitems.DefaultGameQuitIte
 import net.timenation.timespigotapi.manager.game.features.TrampolineFeature;
 import net.timenation.timespigotapi.manager.game.gamestates.GameState;
 import net.timenation.timespigotapi.manager.game.manager.ConfigManager;
+import net.timenation.timespigotapi.manager.game.modules.ForcemapModule;
 import net.timenation.timespigotapi.manager.game.modules.NickModule;
 import net.timenation.timespigotapi.manager.game.scoreboard.ScoreboardManager;
 import net.timenation.timespigotapi.manager.game.team.TeamManager;
@@ -21,6 +22,9 @@ import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 
 public final class SpecialPvP extends TimeGame {
@@ -30,16 +34,19 @@ public final class SpecialPvP extends TimeGame {
     private CountdownManager countdownManager;
     private InventoryManager inventoryManager;
     private KitManager kitManager;
+    private ManaManager manaManager;
+    private SpecialPvPConfig specialPvPConfig;
     private DefaultGameQuitItem defaultGameQuitItem;
-    private DefaultGameNavigatorItem defaultGameNavigatorItem;
 
     @Override
     public void onEnable() {
         instance = this;
         ingameManager = new IngameManager();
         countdownManager = new CountdownManager(this);
-        kitManager = new KitManager();
         inventoryManager = new InventoryManager();
+        kitManager = new KitManager();
+        manaManager = new ManaManager();
+        specialPvPConfig = new SpecialPvPConfig();
         defaultGameQuitItem = new DefaultGameQuitItem(this, 7);
 
         setPrefix("SpecialPvP");
@@ -49,13 +56,22 @@ public final class SpecialPvP extends TimeGame {
         setScoreboardManager(new ScoreboardManager(this));
         setGameWithKits(true);
         setCountdown(60);
-        defaultGameNavigatorItem = new DefaultGameNavigatorItem(this, 1);
+
+        new DefaultGameNavigatorItem(this, 1);
         new DefaultGameExplainItem(this,6, "api.game.specialpvp.explain");
+
         new TrampolineFeature(this);
         new NickModule(this);
+        new ForcemapModule(this);
 
-        Bukkit.createWorld(new WorldCreator("Castle"));
-        setGameMap("Castle", "Pixelbiester", Bukkit.getWorld("Castle"));
+        new LightningLastHittetPlayerSkill(this);
+
+        for (File file : new File("plugins/SpecialPvP/maps").listFiles()) {
+            try {
+                Bukkit.createWorld(new WorldCreator(new JsonParser().parse(new FileReader(file)).getAsJsonObject().get("mapWorld").getAsString()));
+            } catch (FileNotFoundException ignored) {}
+        }
+        setRandomGameMap();
 
         for (World world : Bukkit.getWorlds()) {
             world.setDifficulty(Difficulty.EASY);
@@ -94,20 +110,24 @@ public final class SpecialPvP extends TimeGame {
         return countdownManager;
     }
 
-    public KitManager getKitManager() {
-        return kitManager;
-    }
-
     public InventoryManager getInventoryManager() {
         return inventoryManager;
     }
 
-    public DefaultGameQuitItem getDefaultGameQuitItem() {
-        return defaultGameQuitItem;
+    public KitManager getKitManager() {
+        return kitManager;
     }
 
-    public DefaultGameNavigatorItem getDefaultGameNavigatorItem() {
-        return defaultGameNavigatorItem;
+    public ManaManager getManaManager() {
+        return manaManager;
+    }
+
+    public SpecialPvPConfig getSpecialPvPConfig() {
+        return specialPvPConfig;
+    }
+
+    public DefaultGameQuitItem getDefaultGameQuitItem() {
+        return defaultGameQuitItem;
     }
 
     @Override
@@ -127,7 +147,7 @@ public final class SpecialPvP extends TimeGame {
 
     @Override
     public int getNeededPlayers() {
-        return 1;
+        return specialPvPConfig.getInt("neededPlayers");
     }
 
     @Override

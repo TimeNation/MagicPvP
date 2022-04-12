@@ -20,7 +20,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class PlayerDeathListener implements Listener {
 
     @EventHandler
-    public void onDeath(PlayerDeathEvent event) {
+    public void handlePlayerDeath(PlayerDeathEvent event) {
         var player = event.getPlayer();
         TimePlayer timePlayer = TimeSpigotAPI.getInstance().getTimePlayerManager().getTimePlayer(player);
         TimeStatsPlayer timeStatsPlayer = TimeSpigotAPI.getInstance().getTimeStatsPlayerManager().getTimeStatsPlayer(player, "SpecialPvP");
@@ -55,8 +55,6 @@ public class PlayerDeathListener implements Listener {
                 SpecialPvP.getInstance().getIngameManager().sendIngameScoreboard(player, SpecialPvP.getInstance());
             });
 
-            killer.sendMessage(I18n.format(player, SpecialPvP.getInstance().getPrefix(), "api.game.actionbar.playerkilledplayer", TimeSpigotAPI.getInstance().getRankManager().getPlayersRank(player.getUniqueId()).getPlayersNameWithRankColor(player.getUniqueId())));
-            timeKiller.setCoins(timeKiller.getCoins() + 100);
             timeStatsKiller.setKills(timeStatsKiller.getKills() + 1);
             killer.playSound(killer.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 0);
         }
@@ -81,7 +79,7 @@ public class PlayerDeathListener implements Listener {
 
             Bukkit.getOnlinePlayers().forEach(current -> {
                 current.hidePlayer(player);
-                current.sendMessage(I18n.format(player, SpecialPvP.getInstance().getPrefix(), "api.game.messages.player.killedbyplayer", TimeSpigotAPI.getInstance().getRankManager().getPlayersRank(player.getUniqueId()).getPlayersNameWithRankColor(player.getUniqueId()), TimeSpigotAPI.getInstance().getRankManager().getPlayersRank(killer.getUniqueId()).getPlayersNameWithRankColor(killer.getUniqueId())));
+                current.sendMessage(I18n.format(player, SpecialPvP.getInstance().getPrefix(), "api.game.messages.player.killedbyplayerfinal", TimeSpigotAPI.getInstance().getRankManager().getPlayersRank(player.getUniqueId()).getPlayersNameWithRankColor(player.getUniqueId()), TimeSpigotAPI.getInstance().getRankManager().getPlayersRank(killer.getUniqueId()).getPlayersNameWithRankColor(killer.getUniqueId())));
                 SpecialPvP.getInstance().getIngameManager().sendIngameScoreboard(current, SpecialPvP.getInstance());
             });
 
@@ -92,7 +90,7 @@ public class PlayerDeathListener implements Listener {
         }
 
         if (SpecialPvP.getInstance().getPlayers().size() == 1) {
-            SpecialPvP.getInstance().getCountdownManager().startEndountdown();
+            SpecialPvP.getInstance().getCountdownManager().startEndCountdown();
             SpecialPvP.getInstance().setGameState(GameState.ENDING);
 
             TimePlayer timeWinner = TimeSpigotAPI.getInstance().getTimePlayerManager().getTimePlayer(SpecialPvP.getInstance().getPlayers().get(0));
