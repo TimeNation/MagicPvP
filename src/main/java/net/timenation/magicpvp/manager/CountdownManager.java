@@ -66,6 +66,8 @@ public class CountdownManager extends Countdown<MagicPvP> {
 
     @Override
     public void atEnd() {
-        Bukkit.getOnlinePlayers().forEach(player -> { MagicPvP.getInstance().getManaManager().getPlayersBossBar(player).removeAll(); });
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            if(MagicPvP.getInstance().getManaManager().getPlayersBossBar(player) != null) MagicPvP.getInstance().getManaManager().getPlayersBossBar(player).removeAll();
+        });
     }
 }

@@ -125,7 +125,7 @@ public final class MagicPvP extends TimeGame {
                     countdownManager.startEndCountdown();
                     Bukkit.getOnlinePlayers().forEach(current -> {
                         TimeSpigotAPI.getInstance().getTimeStatsPlayerManager().getTimeStatsPlayer(current, getGameName()).setLooses(TimeSpigotAPI.getInstance().getTimeStatsPlayerManager().getTimeStatsPlayer(current, getGameName()).getLooses() + 1);
-                        current.showPlayer(this, getSpecatePlayers().get(0));
+                        specatePlayer.forEach(specatePlayer -> { if(specatePlayer != current) current.showPlayer(this, specatePlayer); });
                         current.getInventory().clear();
                         defaultGameQuitItem.setItem(current);
                         current.teleport(new Location(Bukkit.getWorld("world"), 111.5, 114.00, -262.5, -45, 0));

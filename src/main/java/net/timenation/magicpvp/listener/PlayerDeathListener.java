@@ -38,12 +38,12 @@ public class PlayerDeathListener implements Listener {
         if (player.getMetadata("lives").get(0).asInt() != 0) {
             Player killer = player.getKiller();
             TimePlayer timeKiller = TimeSpigotAPI.getInstance().getTimePlayerManager().getTimePlayer(killer);
-            TimeStatsPlayer timeStatsKiller = TimeSpigotAPI.getInstance().getTimeStatsPlayerManager().getTimeStatsPlayer(killer, "SpecialPvP");
+            TimeStatsPlayer timeStatsKiller = TimeSpigotAPI.getInstance().getTimeStatsPlayerManager().getTimeStatsPlayer(killer, "MagicPvP");
 
             Bukkit.getScheduler().runTaskLater(MagicPvP.getInstance(), () -> {
                 player.spigot().respawn();
                 MagicPvP.getInstance().getIngameManager().teleportPlayerToLocation(player, ThreadLocalRandom.current().nextInt(1, 4), MagicPvP.getInstance());
-                player.sendMessage(I18n.format(player, MagicPvP.getInstance().getPrefix(), "api.game.messages.magicpvp.remaininglives", player.getMetadata("lives").get(0).asString()));
+                player.sendMessage(I18n.format(player, MagicPvP.getInstance().getPrefix(), "api.game.messages.magicpvp.remaininglives", MagicPvP.getInstance().getSecoundColor(), player.getMetadata("lives").get(0).asString()));
                 player.playSound(player.getLocation(), Sound.ENTITY_ZOMBIE_INFECT, 10F, 1F);
                 player.getInventory().setContents(MagicPvP.getInstance().getKitManager().getKitFromPlayer(player).getKitObject().getContent());
                 player.getInventory().setArmorContents(MagicPvP.getInstance().getKitManager().getKitFromPlayer(player).getKitObject().getArmor());
@@ -101,7 +101,7 @@ public class PlayerDeathListener implements Listener {
             MagicPvP.getInstance().setGameState(GameState.ENDING);
 
             TimePlayer timeWinner = TimeSpigotAPI.getInstance().getTimePlayerManager().getTimePlayer(MagicPvP.getInstance().getPlayers().get(0));
-            TimeStatsPlayer timeStatsWinner = TimeSpigotAPI.getInstance().getTimeStatsPlayerManager().getTimeStatsPlayer(MagicPvP.getInstance().getPlayers().get(0), "SpecialPvP");
+            TimeStatsPlayer timeStatsWinner = TimeSpigotAPI.getInstance().getTimeStatsPlayerManager().getTimeStatsPlayer(MagicPvP.getInstance().getPlayers().get(0), "MagicPvP");
             Player winner = MagicPvP.getInstance().getPlayers().get(0);
 
             timeWinner.setCoins(timeWinner.getCoins() + 300);
@@ -120,7 +120,7 @@ public class PlayerDeathListener implements Listener {
                     current.sendTitle(I18n.format(current, "api.game.title.loose.top"), I18n.format(current, "api.game.title.loose.bottom", (Object) TimeSpigotAPI.getInstance().getRankManager().getPlayersRank(winner.getUniqueId()).getPlayersNameWithRankColor(winner.getUniqueId())));
                 current.showPlayer(current);
                 MagicPvP.getInstance().getScoreboardManager().sendEndScoreboardToPlayer(current, winner);
-                if(current != winner) TimeSpigotAPI.getInstance().getTimeStatsPlayerManager().getTimeStatsPlayer(current, "SpecialPvP").setLooses(TimeSpigotAPI.getInstance().getTimeStatsPlayerManager().getTimeStatsPlayer(current, "SpecialPvP").getLooses() + 1);
+                if(current != winner) TimeSpigotAPI.getInstance().getTimeStatsPlayerManager().getTimeStatsPlayer(current, "MagicPvP").setLooses(TimeSpigotAPI.getInstance().getTimeStatsPlayerManager().getTimeStatsPlayer(current, "MagicPvP").getLooses() + 1);
                 TimeSpigotAPI.getInstance().getTimePlayerManager().updateTimePlayer(TimeSpigotAPI.getInstance().getTimePlayerManager().getTimePlayer(current));
             });
         }
