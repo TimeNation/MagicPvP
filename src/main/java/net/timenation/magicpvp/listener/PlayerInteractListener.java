@@ -3,6 +3,7 @@ package net.timenation.magicpvp.listener;
 import net.timenation.magicpvp.MagicPvP;
 import net.timenation.timespigotapi.manager.game.gamestates.GameState;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -12,7 +13,7 @@ public class PlayerInteractListener implements Listener {
 
     @EventHandler
     public void handlePlayerInteract(PlayerInteractEvent event) {
-        var player = event.getPlayer();
+        Player player = event.getPlayer();
 
         if (event.getItem() == null || event.getItem().getItemMeta() == null || event.getItem().getType().equals(Material.AIR)) return;
 
@@ -24,7 +25,7 @@ public class PlayerInteractListener implements Listener {
             switch (event.getItem().getType()) {
                 case BARREL -> {
                     if (MagicPvP.getInstance().getGameState() == GameState.LOBBY || MagicPvP.getInstance().getGameState() == GameState.STARTING) {
-                        MagicPvP.getInstance().getInventoryManager().openSelectKitInventory(player);
+                        MagicPvP.getInstance().getInventoryManager().openVoteKitInventory(player);
                     }
                 }
                 case COMPASS -> {

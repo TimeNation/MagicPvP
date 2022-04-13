@@ -1,6 +1,7 @@
 package net.timenation.magicpvp.listener;
 
 import net.timenation.magicpvp.MagicPvP;
+import net.timenation.magicpvp.manager.kits.KitType;
 import net.timenation.timespigotapi.TimeSpigotAPI;
 import net.timenation.timespigotapi.manager.ItemManager;
 import net.timenation.timespigotapi.manager.game.gamestates.GameState;
@@ -13,6 +14,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -20,7 +22,7 @@ public class PlayerDeathListener implements Listener {
 
     @EventHandler
     public void handlePlayerDeath(PlayerDeathEvent event) {
-        var player = event.getPlayer();
+        Player player = event.getPlayer();
         TimePlayer timePlayer = TimeSpigotAPI.getInstance().getTimePlayerManager().getTimePlayer(player);
         TimeStatsPlayer timeStatsPlayer = TimeSpigotAPI.getInstance().getTimeStatsPlayerManager().getTimeStatsPlayer(player, "SpecialPvP");
 
@@ -47,6 +49,12 @@ public class PlayerDeathListener implements Listener {
                 player.getInventory().setArmorContents(MagicPvP.getInstance().getKitManager().getKitFromPlayer(player).getKitObject().getArmor());
                 player.getInventory().setItem(7, new ItemManager(Material.END_ROD).setDisplayName(I18n.format(player, "api.game.magicpvp.item.lightning")).build());
                 player.getInventory().setItem(8, new ItemManager(Material.IRON_AXE).setDisplayName(I18n.format(player, "api.game.magicpvp.item.thor_hammer")).build());
+
+                if(MagicPvP.getInstance().getKitManager().getKitFromPlayer(player).equals(KitType.HEALER)) {
+                    for (int i = 0; i < 33; i++) {
+                        player.getInventory().addItem(new ItemManager(Material.SPLASH_POTION, 1).addPotionEffect(PotionEffectType.HEAL, 2, 0, true).build());
+                    }
+                }
             }, 5);
 
             Bukkit.getOnlinePlayers().forEach(current -> {
@@ -61,7 +69,7 @@ public class PlayerDeathListener implements Listener {
         if (player.getMetadata("lives").get(0).asInt() < 1) {
             Player killer = player.getKiller();
             TimePlayer timeKiller = TimeSpigotAPI.getInstance().getTimePlayerManager().getTimePlayer(killer);
-            TimeStatsPlayer timeStatsKiller = TimeSpigotAPI.getInstance().getTimeStatsPlayerManager().getTimeStatsPlayer(killer, "SpecialPvP");
+            TimeStatsPlayer timeStatsKiller = TimeSpigotAPI.getInstance().getTimeStatsPlayerManager().getTimeStatsPlayer(killer, MagicPvP.getInstance().getGameName());
             MagicPvP.getInstance().getPlayers().remove(player);
             MagicPvP.getInstance().getSpecatePlayers().add(player);
 

@@ -6,8 +6,12 @@ import net.timenation.magicpvp.commands.UnnickCommand;
 import net.timenation.magicpvp.listener.*;
 import net.timenation.magicpvp.manager.*;
 import net.timenation.magicpvp.manager.kits.KitManager;
-import net.timenation.magicpvp.manager.skills.LightningLastHittetPlayerSkill;
+import net.timenation.magicpvp.manager.skills.EvokerFangs;
+import net.timenation.magicpvp.manager.skills.LightningLastHittetPlayer;
+import net.timenation.magicpvp.manager.skills.ThorsHammer;
+import net.timenation.timespigotapi.TimeSpigotAPI;
 import net.timenation.timespigotapi.manager.game.TimeGame;
+import net.timenation.timespigotapi.manager.game.countdown.Timer;
 import net.timenation.timespigotapi.manager.game.defaultitems.DefaultGameExplainItem;
 import net.timenation.timespigotapi.manager.game.defaultitems.DefaultGameNavigatorItem;
 import net.timenation.timespigotapi.manager.game.defaultitems.DefaultGameQuitItem;
@@ -18,6 +22,7 @@ import net.timenation.timespigotapi.manager.game.modules.ForcemapModule;
 import net.timenation.timespigotapi.manager.game.modules.NickModule;
 import net.timenation.timespigotapi.manager.game.scoreboard.ScoreboardManager;
 import net.timenation.timespigotapi.manager.game.team.TeamManager;
+import net.timenation.timespigotapi.manager.language.I18n;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -35,8 +40,10 @@ public final class MagicPvP extends TimeGame {
     private InventoryManager inventoryManager;
     private KitManager kitManager;
     private ManaManager manaManager;
+    private KitVoteManager kitVoteManager;
     private MagicPvPConfig specialPvPConfig;
     private DefaultGameQuitItem defaultGameQuitItem;
+    private Timer timer;
 
     @Override
     public void onEnable() {
@@ -46,8 +53,10 @@ public final class MagicPvP extends TimeGame {
         inventoryManager = new InventoryManager();
         kitManager = new KitManager();
         manaManager = new ManaManager();
+        kitVoteManager = new KitVoteManager();
         specialPvPConfig = new MagicPvPConfig();
         defaultGameQuitItem = new DefaultGameQuitItem(this, 7);
+        timer = new Timer(this, 300);
 
         setPrefix("MagicPvP");
         setColor("§5");
@@ -64,7 +73,9 @@ public final class MagicPvP extends TimeGame {
         new NickModule(this);
         new ForcemapModule(this);
 
-        new LightningLastHittetPlayerSkill(this);
+        new LightningLastHittetPlayer(this);
+        new ThorsHammer(this);
+        new EvokerFangs(this);
 
         for (File file : new File("plugins/MagicPvP/maps").listFiles()) {
             try {
@@ -96,6 +107,34 @@ public final class MagicPvP extends TimeGame {
 
         getCommand("start").setExecutor(new StartCommand());
         getCommand("unnick").setExecutor(new UnnickCommand(this));
+
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> {
+            if (gameState == GameState.LOBBY || gameState == GameState.INGAME) {
+                if (Bukkit.getOnlinePlayers().size() < getNeededPlayers()) {
+                    Bukkit.getOnlinePlayers().forEach(player -> {
+                        player.sendActionBar(I18n.format(player, getPrefix(), "api.game.actionbar.idle", getSecoundColor(), getNeededPlayers() - Bukkit.getOnlinePlayers().size()));
+                    });
+                }
+            }
+
+            if (timer.getTime() == 0 && getGameState() != GameState.ENDING) {
+                setGameState(GameState.ENDING);
+
+                Bukkit.getScheduler().runTask(this, () -> {
+                    timer.stopTimer();
+                    countdownManager.startEndCountdown();
+                    Bukkit.getOnlinePlayers().forEach(current -> {
+                        TimeSpigotAPI.getInstance().getTimeStatsPlayerManager().getTimeStatsPlayer(current, getGameName()).setLooses(TimeSpigotAPI.getInstance().getTimeStatsPlayerManager().getTimeStatsPlayer(current, getGameName()).getLooses() + 1);
+                        current.showPlayer(this, getSpecatePlayers().get(0));
+                        current.getInventory().clear();
+                        defaultGameQuitItem.setItem(current);
+                        current.teleport(new Location(Bukkit.getWorld("world"), 111.5, 114.00, -262.5, -45, 0));
+                        current.sendTitle(I18n.format(current, "api.game.title.undecided.top"), I18n.format(current, "api.game.title.undecided.bottom"));
+                        this.getSpecatePlayers().remove(current);
+                    });
+                });
+            }
+        }, 1L, 1L);
     }
 
     public static MagicPvP getInstance() {
@@ -120,6 +159,10 @@ public final class MagicPvP extends TimeGame {
 
     public ManaManager getManaManager() {
         return manaManager;
+    }
+
+    public KitVoteManager getKitVoteManager() {
+        return kitVoteManager;
     }
 
     public MagicPvPConfig getSpecialPvPConfig() {

@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -18,13 +19,12 @@ public class PlayerJoinListener implements Listener {
 
     @EventHandler
     public void handlePlayerJoin(PlayerJoinEvent event) {
-        var player = event.getPlayer();
+        Player player = event.getPlayer();
 
         if (MagicPvP.getInstance().getGameState().equals(GameState.LOBBY) || MagicPvP.getInstance().getGameState().equals(GameState.STARTING)) {
             player.teleport(new Location(Bukkit.getWorld("world"), 111.5, 114.00, -262.5, -45, 0));
-            player.getInventory().setItem(2, new ItemManager(Material.BARREL, 1).setDisplayName(I18n.format(player, "api.game.item.kit", MagicPvP.getInstance().getPrefix())).build());
-            MagicPvP.getInstance().getKitManager().getPlayerKitTypeMap().put(player, KitType.DEFAULT);
-            MagicPvP.getInstance().getPlayerKit().put(player, MagicPvP.getInstance().getKitManager().getPlayerKitTypeMap().get(player).getKitTranslateKey(player));
+            player.getInventory().setItem(2, new ItemManager(MagicPvP.getInstance().getCountdownManager().countdown > 10 ? Material.BARREL : Material.BARRIER, 1).setDisplayName(I18n.format(player, "api.game.item.kitvoting", MagicPvP.getInstance().getPrefix())).build());
+            MagicPvP.getInstance().getPlayerKit().put(player, MagicPvP.getInstance().getColor() + "Voting...");
 
             if (Bukkit.getOnlinePlayers().size() == MagicPvP.getInstance().getNeededPlayers()) {
                 MagicPvP.getInstance().getCountdownManager().startCountdown();
@@ -32,7 +32,7 @@ public class PlayerJoinListener implements Listener {
 
             Bukkit.getOnlinePlayers().forEach(current -> {
                 current.sendMessage(I18n.format(current, MagicPvP.getInstance().getPrefix(), "api.game.messages.join", TimeSpigotAPI.getInstance().getRankManager().getPlayersRank(player.getUniqueId()).getPlayersRankAndName(player.getUniqueId()), Bukkit.getOnlinePlayers().size(), Bukkit.getMaxPlayers()));
-                MagicPvP.getInstance().getScoreboardManager().sendLobbyKitScoreboardToPlayer(current, MagicPvP.getInstance().getCountdownManager().getCountdown(), MagicPvP.getInstance().getColor() + I18n.format(current, MagicPvP.getInstance().getKitManager().getKitFromPlayer(current).getKitTranslateKey(current)));
+                MagicPvP.getInstance().getScoreboardManager().sendLobbyKitScoreboardToPlayer(current, MagicPvP.getInstance().getCountdownManager().getCountdown(), MagicPvP.getInstance().getColor() + "Voting...");
             });
 
             return;

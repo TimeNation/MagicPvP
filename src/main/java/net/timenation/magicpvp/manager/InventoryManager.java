@@ -10,45 +10,22 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-/**
- * Created by Moritz on 11.04.2022
- *
- * @author ItzMxritz (blockpixels.de)
- */
 public class InventoryManager {
 
-    private final ItemStack blackGlass = new ItemManager(Material.BLACK_STAINED_GLASS_PANE, 1).setDisplayName("§r").build();
+    private final ItemStack blackGlass = new ItemManager(Material.BLACK_STAINED_GLASS_PANE, 1).setDisplayName(" ").build();
 
-    public void openSelectKitInventory(Player player) {
-        Inventory inventory = Bukkit.createInventory(null, 9 * 6, I18n.format(player, "api.game.inventory.specialpvp.kit.title"));
-
-        for (int i = 0; i < 9; i++) {
-            inventory.setItem(i, blackGlass);
-        }
-
-        for (int i = 45; i < 54; i++) {
-            inventory.setItem(i, blackGlass);
-        }
-
-        inventory.setItem(17, blackGlass);
-        inventory.setItem(26, blackGlass);
-        inventory.setItem(35, blackGlass);
-        inventory.setItem(44, blackGlass);
-
-        inventory.setItem(9, blackGlass);
-        inventory.setItem(18, blackGlass);
-        inventory.setItem(27, blackGlass);
-        inventory.setItem(36, blackGlass);
+    public void openVoteKitInventory(Player player) {
+        Inventory inventory = Bukkit.createInventory(null, 9 * 6, I18n.format(player, "api.game.inventory.kitvote.title", MagicPvP.getInstance().getPrefix()));
 
         for (KitType kitType : KitType.values()) {
-            inventory.addItem(new ItemManager(kitType.getKitObject().getItem()).setDisplayName(kitType.getKitName(player)).setLore(kitType.getKitDescription(player)).build());
+            inventory.addItem(new ItemManager(kitType.getKitObject().getItem()).setDisplayName(kitType.getKitName(player)).setLore(I18n.formatLines(player, "api.game.inventory.kitvote.votes", MagicPvP.getInstance().getColor(), MagicPvP.getInstance().getKitVoteManager().getVotesFromKit(kitType))).build());
         }
 
         player.openInventory(inventory);
     }
 
     public void openPlayersInventory(Player player) {
-        Inventory inventory = Bukkit.createInventory(null, 9, I18n.format(player, "api.game.inventory.specialpvp.navigator.title"));
+        Inventory inventory = Bukkit.createInventory(null, 9, I18n.format(player, "api.game.inventory.magicpvp.navigator.title"));
 
         for (Player players : MagicPvP.getInstance().getPlayers()) {
             inventory.addItem(new ItemManager(Material.PLAYER_HEAD, 1).setDisplayName("§8» §a" + players.getName()).setSkullOwner(Bukkit.getPlayer(players.getUniqueId())).build());
@@ -56,5 +33,4 @@ public class InventoryManager {
 
         player.openInventory(inventory);
     }
-
 }

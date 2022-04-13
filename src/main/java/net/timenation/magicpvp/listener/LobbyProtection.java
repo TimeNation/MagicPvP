@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -115,11 +116,11 @@ public class LobbyProtection implements Listener {
 
     @EventHandler
     public void handleProjectileHit(ProjectileHitEvent event) {
-        var player = event.getHitEntity();
+        Entity player = event.getHitEntity();
 
         if (event.getEntity().getType() == EntityType.TRIDENT) {
             event.getEntity().remove();
-            var shooter = (Player) event.getEntity().getShooter();
+            Player shooter = (Player) event.getEntity().getShooter();
 
             shooter.getInventory().addItem(new ItemManager(Material.TRIDENT).addEnchantment(Enchantment.LOYALTY, 1).setDisplayName("§8» §9Poseidon´s Gabel").addEnchantment(Enchantment.DURABILITY, 2).addEnchantment(Enchantment.DAMAGE_ALL, 2).build());
         }

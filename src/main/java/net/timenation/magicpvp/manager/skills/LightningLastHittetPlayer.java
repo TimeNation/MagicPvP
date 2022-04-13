@@ -10,23 +10,25 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-public class LightningLastHittetPlayerSkill implements Listener {
+public class LightningLastHittetPlayer implements Listener {
 
     private final MagicPvP magicPvP;
 
-    public LightningLastHittetPlayerSkill(MagicPvP magicPvP) {
+    public LightningLastHittetPlayer(MagicPvP magicPvP) {
         this.magicPvP = magicPvP;
         Bukkit.getPluginManager().registerEvents(this, magicPvP);
     }
 
     @EventHandler
     public void handlePlayerInteract(PlayerInteractEvent event) {
+        if (event.getItem() == null || event.getItem().getItemMeta() == null || event.getItem().getType().equals(Material.AIR)) return;
         if(event.getAction().isLeftClick()) return;
 
         if (event.getAction().isRightClick() && event.getItem().getType().equals(Material.END_ROD)) {
             Player player = event.getPlayer();
             if(player.getKiller() instanceof Player && player.getKiller() != null) {
                 if(magicPvP.getManaManager().getPlayersMana(player) >= 7) {
+                    magicPvP.getWorld().strikeLightning(player.getKiller().getLocation());
                     magicPvP.getWorld().strikeLightning(player.getKiller().getLocation());
                     magicPvP.getManaManager().removeManaFromPlayer(player, ManaManager.ManaLevel.LEVEL_7);
                     player.getKiller().setKiller(player);
