@@ -46,8 +46,12 @@ public class EvokerFangs implements Listener {
     @EventHandler
     public void handleEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
         if(event.getDamager().getType().equals(EntityType.EVOKER_FANGS) && event.getEntity() instanceof Player player) {
-            player.setVelocity(event.getEntity().getLocation().getDirection().multiply(-1.2));
-            player.setKiller(Bukkit.getPlayer(UUID.fromString(event.getDamager().getMetadata("uuid").get(0).asString())));
+            if(!player.getUniqueId().equals(UUID.fromString(event.getDamager().getMetadata("uuid").get(0).asString()))) {
+                player.setVelocity(event.getEntity().getLocation().getDirection().multiply(-1.2));
+                player.setKiller(Bukkit.getPlayer(UUID.fromString(event.getDamager().getMetadata("uuid").get(0).asString())));
+            } else {
+                event.setCancelled(true);
+            }
         }
     }
 }
